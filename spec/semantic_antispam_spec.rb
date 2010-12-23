@@ -24,12 +24,15 @@ describe Comment do
   end
 
   it "should succeed with a valid answer" do
-    answer = case @comment.antispam_question
-      when /sea/i then 'blue'
-      when /sky/i then 'blue'
-      when /france/i then 'paris'
-    end
-    @comment.antispam_answer = answer
+    @comment.antispam_answer = answer_correctly(@comment.antispam_question)
     @comment.should be_valid
+  end
+
+  it "should work with a reused hash" do
+    @comment.antispam_answer = 'shit'
+    @comment.should_not be_valid
+    @new_comment = Comment.new(@comment.attributes)
+    @new_comment.antispam_answer = answer_correctly(@new_comment.antispam_question)
+    @new_comment.should be_valid
   end
 end

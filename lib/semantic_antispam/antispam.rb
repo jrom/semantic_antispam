@@ -32,12 +32,14 @@ module Semantic
     module ClassMethods
       def semantic_antispam
         class_eval do
-          attr_writer :antispam_hash, :antispam_answer
-          attr_reader :antispam_answer
+          attr_accessor :antispam_answer
+          attr_writer :antispam_hash
 
           private
           def semantic_antispam_question
             @semantic_antispam_question ||= Semantic::Antispam.questions.sample
+            @antispam_hash ||= @semantic_antispam_question[:hash]
+            @semantic_antispam_question
           end
 
           public
@@ -46,7 +48,7 @@ module Semantic
           end
 
           def antispam_hash
-            @antispam_hash || semantic_antispam_question[:hash]
+            semantic_antispam_question[:hash]
           end
 
           validate :check_semantic_antispam, :on => :create
