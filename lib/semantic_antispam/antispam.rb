@@ -32,12 +32,14 @@ module Semantic
     module ClassMethods
       def semantic_antispam
         class_eval do
-          attr_writer :antispam_hash, :antispam_answer
-          attr_reader :antispam_answer
+          attr_accessor :antispam_answer
+          attr_writer :antispam_hash
 
           private
           def semantic_antispam_question
             @semantic_antispam_question ||= Semantic::Antispam.questions.sample
+            @antispam_hash ||= @semantic_antispam_question[:hash]
+            @semantic_antispam_question
           end
 
           public
@@ -46,13 +48,13 @@ module Semantic
           end
 
           def antispam_hash
-            @antispam_hash || semantic_antispam_question[:hash]
+            semantic_antispam_question[:hash]
           end
 
           validate :check_semantic_antispam, :on => :create
           private
           def check_semantic_antispam
-            errors.add :antispam_answer, I18n.t("semantic_antispam.error_msg", :default=>"SPAM") unless antispam_answer and Semantic::Antispam.find(antispam_hash)[:answer].downcase == antispam_answer.downcase
+            errors.add :antispam_answer, I18n.t("semantic_antispam.error_msg", :default=>"SPAM") unless defined? @antispam_hash and antispam_answer and Semantic::Antispam.find(@antispam_hash)[:answer].downcase == antispam_answer.downcase
           end
         end
       end
