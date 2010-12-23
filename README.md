@@ -22,6 +22,11 @@ If you are not using Rails or want to save this file in a different location:
     
     Semantic::Antispam.config_file = Rails.root + '/antispam.yml'
 
+You can also customize the validation error message by adding a key to your translations file:
+
+    semantic_antispam:
+      error_msg: "I'm not sure you're human. I'll give you another chance, please answer the question again."
+
 ## Usage
 
 If you want to check the humanness of your commenters, just modify your `Comment` model:
