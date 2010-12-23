@@ -52,7 +52,7 @@ module Semantic
           validate :check_semantic_antispam, :on => :create
           private
           def check_semantic_antispam
-            errors.add :antispam_answer, 'SPAM' unless antispam_answer and Semantic::Antispam.find(antispam_hash)[:answer].downcase == antispam_answer.downcase
+            errors.add :antispam_answer, I18n.t("semantic_antispam.error_msg", :default=>"SPAM") unless antispam_answer and Semantic::Antispam.find(antispam_hash)[:answer].downcase == antispam_answer.downcase
           end
         end
       end
